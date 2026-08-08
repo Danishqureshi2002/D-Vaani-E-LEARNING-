@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaani — AI English Tutor</title>
+<meta name="description" content="Vaani is an AI-powered English learning platform: tutor chat, spoken practice, assignments, competitive exam papers, and daily news briefings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="display">Vaani<span>.</span></div>
+    <p>AI English Learning Platform</p>
+  </div>
+  <div class="nav-item active" data-page="dashboard"><span class="ic">🏠</span> Dashboard</div>
+  <div class="nav-item" data-page="tutor"><span class="ic">💬</span> Tutor Chat</div>
+  <div class="nav-item" data-page="speak"><span class="ic">🎙️</span> Speaking Room</div>
+  <div class="nav-item" data-page="write"><span class="ic">📝</span> Assignments</div>
+  <div class="nav-item" data-page="exam"><span class="ic">🎯</span> Exam Practice</div>
+  <div class="nav-item" data-page="news"><span class="ic">🌐</span> World Update</div>
+  <div class="nav-item" data-page="library"><span class="ic">📚</span> Library</div>
+  <div class="sidebar-foot">Vaani v0.2 · Web edition</div>
+</div>
+
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-head">
+      <h1>Welcome back 👋</h1>
+      <p>Here's your English learning desk for today.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="stat-card"><div class="num">12</div><div class="lbl">Day streak</div></div>
+      <div class="stat-card"><div class="num">7</div><div class="lbl">Mock tests attempted</div></div>
+      <div class="stat-card"><div class="num">B2</div><div class="lbl">Current speaking level</div></div>
+    </div>
+    <div class="action-row">
+      <button class="action-btn" onclick="goTo('tutor')">💬 Ask the Tutor</button>
+      <button class="action-btn gold" onclick="goTo('speak')">🎙️ Start Speaking Practice</button>
+      <button class="action-btn outline" onclick="goTo('exam')">🎯 Practice an Exam Paper</button>
+      <button class="action-btn outline" onclick="goTo('news')">🌐 Today's World Update</button>
+    </div>
+    <div class="card" style="margin-top:26px;">
+      <h3 style="font-size:16px; margin-bottom:8px;">How this platform is organised</h3>
+      <p style="color:var(--ink-soft); font-size:14px; line-height:1.6;">
+        Each item in the sidebar is a self-contained module — Tutor, Speaking, Assignments, Exam Practice, News, Library.
+        New modules (like the Library below) are built to slot in the same way, so adding a new feature later means
+        adding one more tile here, not rebuilding the app.
+      </p>
+    </div>
+  </div>
+
+  <!-- TUTOR CHAT -->
+  <div class="page" id="page-tutor">
+    <div class="page-head">
+      <h1>Tutor Chat</h1>
+      <p>Ask about grammar, vocabulary, writing, or anything English — Vaani explains it with examples.</p>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-log" id="tutor-log">
+        <div class="msg ai">Hi! I'm Vaani. Ask me anything — "when do I use 'have been' vs 'had been'?", "check my sentence", or "explain phrasal verbs with examples."</div>
+      </div>
+      <div class="chat-input">
+        <textarea id="tutor-input" placeholder="Type your question..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTutor();}"></textarea>
+        <button class="send-btn" onclick="sendTutor()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEAKING ROOM -->
+  <div class="page" id="page-speak">
+    <div class="page-head">
+      <h1>Speaking Room</h1>
+      <p>A live voice practice room with Vaani. Your camera is local-only (for confidence practice) — Vaani listens and replies by voice.</p>
+    </div>
+    <div class="call-room">
+      <div class="video-pane">
+        <video id="local-video" autoplay muted playsinline></video>
+        <div class="tag">You</div>
+      </div>
+      <div class="ai-pane">
+        <div class="ai-orb" id="ai-orb"></div>
+        <div class="tag">Vaani · AI Speaking Partner</div>
+      </div>
+    </div>
+    <div class="call-controls">
+      <button class="circle-btn cam" onclick="toggleCam()" id="cam-btn">🎥</button>
+      <button class="circle-btn mic" onclick="toggleMic()" id="mic-btn">🎙️</button>
+      <button class="circle-btn end" onclick="endCall()">⏹</button>
+    </div>
+    <div class="card transcript-box" id="speak-transcript">
+      <p style="color:var(--ink-soft);">Tap the mic and start talking. (Needs Chrome/Edge for voice recognition; falls back to typing otherwise.)</p>
+    </div>
+    <div class="chat-input" id="speak-fallback" style="display:none; margin-top:12px; border:1px solid var(--border); border-radius:10px; background:#fff;">
+      <textarea id="speak-input" placeholder="If voice isn't supported on this device, type here instead..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendSpeak(document.getElementById('speak-input').value);}"></textarea>
+      <button class="send-btn" onclick="sendSpeak(document.getElementById('speak-input').value)">➤</button>
+    </div>
+  </div>
+
+  <!-- ASSIGNMENTS -->
+  <div class="page" id="page-write">
+    <div class="page-head">
+      <h1>Assignments</h1>
+      <p>Get a writing task suited to your level, submit your answer, and receive corrected feedback.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;">
+        <div>
+          <label class="field-label">Level</label>
+          <select id="assign-level">
+            <option>Beginner</option>
+            <option selected>Intermediate</option>
+            <option>Advanced</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Focus</label>
+          <select id="assign-focus">
+            <option>General essay writing</option>
+            <option>Formal email / letter</option>
+            <option>Exam-style descriptive writing</option>
+            <option>Storytelling / creative writing</option>
+          </select>
+        </div>
+        <button class="action-btn" onclick="getAssignment()">Get today's assignment</button>
+      </div>
+      <div id="assign-prompt" class="card" style="margin-top:18px; display:none; background:var(--gold-soft); border:none;"></div>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <label class="field-label">Your response</label>
+      <textarea class="write-area" id="assign-answer" placeholder="Write your answer here..."></textarea>
+      <button class="action-btn gold" style="margin-top:14px;" onclick="submitAssignment()">Submit for feedback</button>
+    </div>
+    <div id="assign-feedback" class="card" style="margin-top:18px; display:none;"></div>
+  </div>
+
+  <!-- EXAM PRACTICE -->
+  <div class="page" id="page-exam">
+    <div class="page-head">
+      <h1>Exam Practice</h1>
+      <p>Generate a fresh English-section practice set for your target exam. Bubble the OMR sheet like the real thing.</p>
+    </div>
+    <div class="card exam-setup">
+      <div>
+        <label class="field-label">Exam</label>
+        <select id="exam-select">
+          <option>SSC (CGL / CHSL)</option>
+          <option>UPSC Civil Services (Prelims)</option>
+          <option>Banking (IBPS / SBI PO)</option>
+          <option>Railways (RRB NTPC)</option>
+          <option>NEET</option>
+          <option>CAT</option>
+          <option>XAT</option>
+          <option>State PSC</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Topic</label>
+        <select id="exam-topic">
+          <option>Reading Comprehension</option>
+          <option>Grammar / Error Spotting</option>
+          <option>Vocabulary (Synonyms/Antonyms)</option>
+          <option>Cloze Test</option>
+          <option>Sentence Improvement</option>
+        </select>
+      </div>
+      <button class="action-btn" onclick="getExamSet()">Generate practice set</button>
+    </div>
+    <div id="exam-set" style="margin-top:22px;"></div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="page" id="page-news">
+    <div class="page-head">
+      <h1>World Update</h1>
+      <p>A quick current-affairs briefing — good for exam GK sections and everyday reading practice.</p>
+    </div>
+    <div class="news-tabs">
+      <div class="tab-chip active" data-cat="Top Stories">Top Stories</div>
+      <div class="tab-chip" data-cat="Technology">Technology</div>
+      <div class="tab-chip" data-cat="Business">Business</div>
+      <div class="tab-chip" data-cat="Education">Education</div>
+      <div class="tab-chip" data-cat="India">India</div>
+    </div>
+    <div class="card" id="news-body">
+      <p style="color:var(--ink-soft);">Select a category to fetch today's briefing.</p>
+    </div>
+  </div>
+
+  <!-- LIBRARY (extensible placeholder) -->
+  <div class="page" id="page-library">
+    <div class="page-head">
+      <h1>Library</h1>
+      <p>Reading &amp; listening practice — this module is designed to be added to later.</p>
+    </div>
+    <div class="card">
+      <span class="module-badge">NEW MODULE · IN PROGRESS</span>
+      <h3 style="font-size:17px; margin-bottom:8px;">Upload books &amp; audiobooks</h3>
+      <p style="color:var(--ink-soft); font-size:14px; margin-bottom:18px;">
+        This is where you'd add your own reading material — PDFs, ePubs, or audio files — for students to read or
+        listen to inside the platform, with Vaani available alongside to explain difficult words or summarise chapters.
+      </p>
+      <div class="upload-zone">
+        <div style="font-size:28px; margin-bottom:8px;">📥</div>
+        <div style="font-weight:600; color:var(--ink);">Drop a book or audiobook file here</div>
+        <div style="font-size:12.5px; margin-top:4px;">.pdf · .epub · .mp3 · .m4a — wiring this up to real storage is the next build step</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+      </html>
