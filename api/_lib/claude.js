@@ -6,7 +6,7 @@ module.exports = async function callClaude(userText, system, useSearch = false) 
     throw new Error("Server is missing GEMINI_API_KEY. Set it in your hosting provider's environment variables.");
   }
 
-  const model = "gemini-2.5-flash";
+  const model = "gemini-3.6-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
   const body = {
