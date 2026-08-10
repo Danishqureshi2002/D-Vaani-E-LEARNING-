@@ -64,9 +64,13 @@
     </div>
     <div class="chat-wrap">
       <div class="chat-log" id="tutor-log">
-        <div class="msg ai">Hi! I'm Vaani. Ask me anything — "teach me Arabic greetings in Urdu", "explain Urdu izafat", "translate this sentence to Hindi", or "how do I say 'thank you' in Arabic?"</div>
+        <div class="msg ai">Hi! I'm Vaani. Ask me anything — "teach me Arabic greetings in Urdu", "explain Urdu izafat", "translate this sentence to Hindi", or "how do I say 'thank you' in Arabic?" You can also attach a photo or use the mic to speak your question.</div>
       </div>
+      <div class="image-preview-chip" id="tutor-image-preview" style="display:none;"></div>
       <div class="chat-input">
+        <input type="file" id="tutor-image-input" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
+        <button class="icon-btn" onclick="document.getElementById('tutor-image-input').click()" title="Attach a photo">📷</button>
+        <button class="icon-btn" id="tutor-mic-btn" onclick="toggleTutorMic()" title="Speak your question">🎤</button>
         <textarea id="tutor-input" placeholder="Type your question..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTutor();}"></textarea>
         <button class="send-btn" onclick="sendTutor()">➤</button>
       </div>
@@ -239,4 +243,4 @@
 
 <script src="js/app.js"></script>
 </body>
-  </html>
+</html>
