@@ -170,3 +170,19 @@ textarea.write-area:focus{border-color:var(--ink);}
 .lang-content{white-space:pre-wrap; font-size:15px; line-height:1.9; color:var(--ink);}
 .lang-content.rtl-arabic{direction:rtl; text-align:right; font-family:'Noto Naskh Arabic', serif; font-size:19px; line-height:2.1;}
 .lang-content.rtl-urdu{direction:rtl; text-align:right; font-family:'Noto Nastaliq Urdu', serif; font-size:20px; line-height:2.3;}
+
+/* ---------- CHAT: IMAGE + VOICE INPUT ---------- */
+.icon-btn{
+  width:44px; height:44px; flex-shrink:0; border-radius:8px; border:1.5px solid var(--border);
+  background:#fff; cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center;
+  transition:background .15s, border-color .15s;
+}
+.icon-btn:hover{border-color:var(--ink);}
+.icon-btn.active{background:var(--green); border-color:var(--green); color:#fff;}
+.image-preview-chip{
+  display:flex; align-items:center; gap:10px; padding:8px 16px; background:var(--gold-soft);
+  font-size:12.5px; color:var(--ink);
+}
+.image-preview-chip img{width:36px; height:36px; object-fit:cover; border-radius:6px;}
+.image-preview-chip button{margin-left:auto; background:none; border:none; color:var(--red); font-weight:700; font-size:16px; cursor:pointer;}
+.msg img{max-width:200px; border-radius:8px; display:block; margin-bottom:6px;}
