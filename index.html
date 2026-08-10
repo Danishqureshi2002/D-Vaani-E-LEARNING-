@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vaani — AI English Tutor</title>
-<meta name="description" content="Vaani is an AI-powered English learning platform: tutor chat, spoken practice, assignments, competitive exam papers, and daily news briefings.">
+<title>Vaani — Learn Arabic &amp; Urdu</title>
+<meta name="description" content="Vaani is an AI-powered Arabic and Urdu learning platform: a multilingual tutor (Arabic, Urdu, Hindi, English), spoken practice, sentences, stories, and books in each language.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,11 +14,12 @@
 <div class="sidebar">
   <div class="brand">
     <div class="display">Vaani<span>.</span></div>
-    <p>AI English Learning Platform</p>
+    <p>Learn Arabic &amp; Urdu — via Hindi, Urdu, English</p>
   </div>
   <div class="nav-item active" data-page="dashboard"><span class="ic">🏠</span> Dashboard</div>
   <div class="nav-item" data-page="tutor"><span class="ic">💬</span> Tutor Chat</div>
   <div class="nav-item" data-page="speak"><span class="ic">🎙️</span> Speaking Room</div>
+  <div class="nav-item" data-page="languages"><span class="ic">🌍</span> Languages</div>
   <div class="nav-item" data-page="write"><span class="ic">📝</span> Assignments</div>
   <div class="nav-item" data-page="exam"><span class="ic">🎯</span> Exam Practice</div>
   <div class="nav-item" data-page="news"><span class="ic">🌐</span> World Update</div>
@@ -31,26 +32,26 @@
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="page-head">
-      <h1>Welcome back 👋</h1>
-      <p>Here's your English learning desk for today.</p>
+      <h1>مرحبًا · خوش آمدید · Welcome 👋</h1>
+      <p>Learn Arabic and Urdu, taught through Hindi, Urdu, or English — whichever you're comfortable in.</p>
     </div>
     <div class="grid grid-3">
       <div class="stat-card"><div class="num">12</div><div class="lbl">Day streak</div></div>
-      <div class="stat-card"><div class="num">7</div><div class="lbl">Mock tests attempted</div></div>
-      <div class="stat-card"><div class="num">B2</div><div class="lbl">Current speaking level</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="lbl">Languages in progress</div></div>
+      <div class="stat-card"><div class="num">A2</div><div class="lbl">Current Arabic level</div></div>
     </div>
     <div class="action-row">
       <button class="action-btn" onclick="goTo('tutor')">💬 Ask the Tutor</button>
       <button class="action-btn gold" onclick="goTo('speak')">🎙️ Start Speaking Practice</button>
-      <button class="action-btn outline" onclick="goTo('exam')">🎯 Practice an Exam Paper</button>
+      <button class="action-btn outline" onclick="goTo('languages')">🌍 Practice Arabic, Urdu or English</button>
       <button class="action-btn outline" onclick="goTo('news')">🌐 Today's World Update</button>
     </div>
     <div class="card" style="margin-top:26px;">
       <h3 style="font-size:16px; margin-bottom:8px;">How this platform is organised</h3>
       <p style="color:var(--ink-soft); font-size:14px; line-height:1.6;">
-        Each item in the sidebar is a self-contained module — Tutor, Speaking, Assignments, Exam Practice, News, Library.
-        New modules (like the Library below) are built to slot in the same way, so adding a new feature later means
-        adding one more tile here, not rebuilding the app.
+        The Tutor and Speaking Room understand Arabic, Urdu, Hindi, and English, so you can learn Arabic or Urdu
+        through whichever language feels most natural. The Languages section gives each of Arabic, Urdu, and English
+        its own space with practice sentences, short stories, and book suggestions.
       </p>
     </div>
   </div>
@@ -59,11 +60,11 @@
   <div class="page" id="page-tutor">
     <div class="page-head">
       <h1>Tutor Chat</h1>
-      <p>Ask about grammar, vocabulary, writing, or anything English — Vaani explains it with examples.</p>
+      <p>Ask about Arabic, Urdu, Hindi, or English — grammar, vocabulary, script, or translation. Vaani explains across all four.</p>
     </div>
     <div class="chat-wrap">
       <div class="chat-log" id="tutor-log">
-        <div class="msg ai">Hi! I'm Vaani. Ask me anything — "when do I use 'have been' vs 'had been'?", "check my sentence", or "explain phrasal verbs with examples."</div>
+        <div class="msg ai">Hi! I'm Vaani. Ask me anything — "teach me Arabic greetings in Urdu", "explain Urdu izafat", "translate this sentence to Hindi", or "how do I say 'thank you' in Arabic?"</div>
       </div>
       <div class="chat-input">
         <textarea id="tutor-input" placeholder="Type your question..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTutor();}"></textarea>
@@ -76,7 +77,7 @@
   <div class="page" id="page-speak">
     <div class="page-head">
       <h1>Speaking Room</h1>
-      <p>A live voice practice room with Vaani. Your camera is local-only (for confidence practice) — Vaani listens and replies by voice.</p>
+      <p>A live voice practice room with Vaani in Arabic, Urdu, Hindi, or English. Your camera is local-only (for confidence practice) — Vaani listens and replies by voice.</p>
     </div>
     <div class="call-room">
       <div class="video-pane">
@@ -99,6 +100,27 @@
     <div class="chat-input" id="speak-fallback" style="display:none; margin-top:12px; border:1px solid var(--border); border-radius:10px; background:#fff;">
       <textarea id="speak-input" placeholder="If voice isn't supported on this device, type here instead..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendSpeak(document.getElementById('speak-input').value);}"></textarea>
       <button class="send-btn" onclick="sendSpeak(document.getElementById('speak-input').value)">➤</button>
+    </div>
+  </div>
+
+  <!-- LANGUAGES -->
+  <div class="page" id="page-languages">
+    <div class="page-head">
+      <h1>Languages</h1>
+      <p>Dedicated practice space for Arabic, Urdu, and English — sentences, stories, and book suggestions in each.</p>
+    </div>
+    <div class="news-tabs" id="lang-tabs">
+      <div class="tab-chip active" data-lang="Arabic">Arabic · العربية</div>
+      <div class="tab-chip" data-lang="Urdu">Urdu · اردو</div>
+      <div class="tab-chip" data-lang="English">English</div>
+    </div>
+    <div class="action-row" style="margin-top:0;">
+      <button class="action-btn" onclick="loadLangSection('sentences')">Practice Sentences</button>
+      <button class="action-btn outline" onclick="loadLangSection('story')">Short Story</button>
+      <button class="action-btn outline" onclick="loadLangSection('books')">Book Suggestions</button>
+    </div>
+    <div class="card" id="lang-body" style="margin-top:18px;">
+      <p style="color:var(--ink-soft);">Choose a language tab above, then pick Sentences, a Story, or Books to begin.</p>
     </div>
   </div>
 
@@ -217,4 +239,4 @@
 
 <script src="js/app.js"></script>
 </body>
-      </html>
+  </html>
