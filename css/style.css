@@ -165,3 +165,8 @@ select:focus, input[type=text]:focus{border-color:var(--ink);}
 
 textarea.write-area{width:100%; min-height:160px; border:1.5px solid var(--border); border-radius:8px; padding:14px; font-family:'Inter'; font-size:14.5px; outline:none; resize:vertical;}
 textarea.write-area:focus{border-color:var(--ink);}
+
+/* ---------- LANGUAGES (Arabic / Urdu scripts) ---------- */
+.lang-content{white-space:pre-wrap; font-size:15px; line-height:1.9; color:var(--ink);}
+.lang-content.rtl-arabic{direction:rtl; text-align:right; font-family:'Noto Naskh Arabic', serif; font-size:19px; line-height:2.1;}
+.lang-content.rtl-urdu{direction:rtl; text-align:right; font-family:'Noto Nastaliq Urdu', serif; font-size:20px; line-height:2.3;}
