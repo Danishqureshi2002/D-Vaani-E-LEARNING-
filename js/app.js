@@ -185,10 +185,36 @@ async function getExamSet(){
   });
 }
 
-/* ---------------- NEWS ---------------- */
-document.querySelectorAll('.tab-chip').forEach(chip=>{
+/* ---------------- LANGUAGES ---------------- */
+let currentLang = 'Arabic';
+let currentLangSection = null;
+
+document.querySelectorAll('#lang-tabs .tab-chip').forEach(chip=>{
   chip.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-chip').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('#lang-tabs .tab-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentLang = chip.dataset.lang;
+    if(currentLangSection) loadLangSection(currentLangSection);
+  });
+});
+
+async function loadLangSection(section){
+  currentLangSection = section;
+  const body = document.getElementById('lang-body');
+  body.innerHTML = '<span class="loading-dots">Preparing your ' + currentLang + ' content</span>';
+  const reply = await callApi('language', {language: currentLang, section});
+
+  let cssClass = 'lang-content';
+  if(currentLang === 'Arabic') cssClass += ' rtl-arabic';
+  else if(currentLang === 'Urdu') cssClass += ' rtl-urdu';
+
+  body.innerHTML = `<div class="${cssClass}">${escapeHtml(reply)}</div>`;
+}
+
+/* ---------------- NEWS ---------------- */
+document.querySelectorAll('#page-news .tab-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('#page-news .tab-chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     loadNews(chip.dataset.cat);
   });
