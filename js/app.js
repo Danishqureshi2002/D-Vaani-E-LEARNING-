@@ -26,20 +26,80 @@ function escapeHtml(s){
 }
 
 /* ---------------- TUTOR CHAT ---------------- */
+let tutorImageData = null;
+
+function handleImageSelect(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    const base64 = dataUrl.split(',')[1];
+    tutorImageData = {base64, mimeType: file.type, dataUrl};
+    const preview = document.getElementById('tutor-image-preview');
+    preview.style.display = 'flex';
+    preview.innerHTML = `<img src="${dataUrl}" alt="attached"><span>Image attached</span><button onclick="clearTutorImage()">✕</button>`;
+  };
+  reader.readAsDataURL(file);
+}
+function clearTutorImage(){
+  tutorImageData = null;
+  const preview = document.getElementById('tutor-image-preview');
+  preview.style.display = 'none';
+  preview.innerHTML = '';
+  document.getElementById('tutor-image-input').value = '';
+}
+
+let tutorRecognizer = null, tutorMicOn = false;
+function toggleTutorMic(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const btn = document.getElementById('tutor-mic-btn');
+  if(!SR){ alert("Voice input isn't supported in this browser — try Chrome or Edge."); return; }
+  if(tutorMicOn){
+    if(tutorRecognizer) tutorRecognizer.stop();
+    return;
+  }
+  tutorRecognizer = new SR();
+  tutorRecognizer.lang = 'en-IN'; tutorRecognizer.interimResults = false; tutorRecognizer.continuous = false;
+  tutorMicOn = true;
+  btn.classList.add('active');
+  tutorRecognizer.onresult = (e)=>{
+    const said = e.results[0][0].transcript;
+    const input = document.getElementById('tutor-input');
+    input.value = (input.value ? input.value + ' ' : '') + said;
+  };
+  tutorRecognizer.onend = ()=>{ tutorMicOn = false; btn.classList.remove('active'); };
+  tutorRecognizer.onerror = ()=>{ tutorMicOn = false; btn.classList.remove('active'); };
+  tutorRecognizer.start();
+}
+
 async function sendTutor(){
   const input = document.getElementById('tutor-input');
   const text = input.value.trim();
-  if(!text) return;
+  if(!text && !tutorImageData) return;
   const log = document.getElementById('tutor-log');
-  log.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`;
-  input.value='';
+
+  let userBubble = '<div class="msg user">';
+  if(tutorImageData) userBubble += `<img src="${tutorImageData.dataUrl}" alt="attached">`;
+  if(text) userBubble += escapeHtml(text);
+  userBubble += '</div>';
+  log.innerHTML += userBubble;
+
+  input.value = '';
   log.scrollTop = log.scrollHeight;
   const thinkingId = 'think-'+Date.now();
   log.innerHTML += `<div class="msg ai loading-dots" id="${thinkingId}">Vaani is typing</div>`;
   log.scrollTop = log.scrollHeight;
-  const reply = await callApi('tutor', {message: text});
+
+  const payload = { message: text || "Please look at this image and help explain or discuss it." };
+  if(tutorImageData){
+    payload.image = tutorImageData.base64;
+    payload.imageType = tutorImageData.mimeType;
+  }
+  const reply = await callApi('tutor', payload);
   document.getElementById(thinkingId).outerHTML = `<div class="msg ai">${escapeHtml(reply).replace(/\n/g,'<br>')}</div>`;
   log.scrollTop = log.scrollHeight;
+  clearTutorImage();
 }
 
 /* ---------------- SPEAKING ROOM ---------------- */
