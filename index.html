@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -24,7 +25,7 @@
   <div class="nav-item" data-page="exam"><span class="ic">🎯</span> Exam Practice</div>
   <div class="nav-item" data-page="news"><span class="ic">🌐</span> World Update</div>
   <div class="nav-item" data-page="library"><span class="ic">📚</span> Library</div>
-  <div class="sidebar-foot">Vaani v0.2 · Web edition</div>
+  <div class="sidebar-foot">Vaani v0.3 · Web edition</div>
 </div>
 
 <div class="main">
@@ -62,6 +63,28 @@
       <h1>Tutor Chat</h1>
       <p>Ask about Arabic, Urdu, Hindi, or English — grammar, vocabulary, script, or translation. Vaani explains across all four.</p>
     </div>
+    <div class="card" style="margin-bottom:14px; display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;">
+      <div>
+        <label class="field-label">I want to learn</label>
+        <select id="tutor-target-lang">
+          <option>Arabic</option>
+          <option>Urdu</option>
+          <option>English</option>
+          <option>Hindi</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Explain to me in</label>
+        <select id="tutor-instruction-lang">
+          <option>English</option>
+          <option>Hindi</option>
+          <option>Urdu</option>
+          <option>Arabic</option>
+        </select>
+      </div>
+      <button class="action-btn outline" onclick="summarizeSession()">📝 Summarize session</button>
+      <button class="action-btn outline" onclick="downloadChatPDF()">📄 Download notes (PDF)</button>
+    </div>
     <div class="chat-wrap">
       <div class="chat-log" id="tutor-log">
         <div class="msg ai">Hi! I'm Vaani. Ask me anything — "teach me Arabic greetings in Urdu", "explain Urdu izafat", "translate this sentence to Hindi", or "how do I say 'thank you' in Arabic?" You can also attach a photo or use the mic to speak your question.</div>
@@ -83,13 +106,48 @@
       <h1>Speaking Room</h1>
       <p>A live voice practice room with Vaani in Arabic, Urdu, Hindi, or English. Your camera is local-only (for confidence practice) — Vaani listens and replies by voice.</p>
     </div>
+    <div class="card" style="margin-bottom:14px; display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;">
+      <div>
+        <label class="field-label">I want to speak</label>
+        <select id="speak-target-lang">
+          <option>Arabic</option>
+          <option>Urdu</option>
+          <option>English</option>
+          <option>Hindi</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Help me in</label>
+        <select id="speak-instruction-lang">
+          <option>Hindi</option>
+          <option>English</option>
+          <option>Urdu</option>
+          <option>Arabic</option>
+        </select>
+      </div>
+    </div>
     <div class="call-room">
       <div class="video-pane">
         <video id="local-video" autoplay muted playsinline></video>
         <div class="tag">You</div>
       </div>
       <div class="ai-pane">
-        <div class="ai-orb" id="ai-orb"></div>
+        <svg id="ai-robot" class="ai-robot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <line x1="100" y1="18" x2="100" y2="40" stroke="#B9860B" stroke-width="4"/>
+          <circle cx="100" cy="14" r="6" fill="#B9860B"/>
+          <rect x="38" y="40" width="124" height="112" rx="28" fill="url(#robotGrad)" stroke="#B9860B" stroke-width="3"/>
+          <circle cx="78" cy="92" r="13" fill="#FAFAF7"/>
+          <circle cx="122" cy="92" r="13" fill="#FAFAF7"/>
+          <circle cx="78" cy="92" r="5.5" fill="#1B2440"/>
+          <circle cx="122" cy="92" r="5.5" fill="#1B2440"/>
+          <rect id="robot-mouth" x="74" y="120" width="52" height="8" rx="4" fill="#FAFAF7"/>
+          <defs>
+            <linearGradient id="robotGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2A3358"/>
+              <stop offset="1" stop-color="#1B2440"/>
+            </linearGradient>
+          </defs>
+        </svg>
         <div class="tag">Vaani · AI Speaking Partner</div>
       </div>
     </div>
@@ -118,6 +176,17 @@
       <div class="tab-chip" data-lang="Urdu">Urdu · اردو</div>
       <div class="tab-chip" data-lang="English">English</div>
     </div>
+    <div class="card" style="margin-bottom:14px; display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;">
+      <div>
+        <label class="field-label">Meaning shown in</label>
+        <select id="lang-mother-tongue">
+          <option>English</option>
+          <option>Hindi</option>
+          <option>Urdu</option>
+          <option>Arabic</option>
+        </select>
+      </div>
+    </div>
     <div class="action-row" style="margin-top:0;">
       <button class="action-btn" onclick="loadLangSection('sentences')">Practice Sentences</button>
       <button class="action-btn outline" onclick="loadLangSection('story')">Short Story</button>
@@ -132,35 +201,48 @@
   <div class="page" id="page-write">
     <div class="page-head">
       <h1>Assignments</h1>
-      <p>Get a writing task suited to your level, submit your answer, and receive corrected feedback.</p>
+      <p>Choose a language, see the full topic list, try a demo, then get your own assignment.</p>
     </div>
-    <div class="card">
-      <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;">
-        <div>
-          <label class="field-label">Level</label>
-          <select id="assign-level">
-            <option>Beginner</option>
-            <option selected>Intermediate</option>
-            <option>Advanced</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">Focus</label>
-          <select id="assign-focus">
-            <option>General essay writing</option>
-            <option>Formal email / letter</option>
-            <option>Exam-style descriptive writing</option>
-            <option>Storytelling / creative writing</option>
-          </select>
-        </div>
-        <button class="action-btn" onclick="getAssignment()">Get today's assignment</button>
+    <div class="card exam-setup">
+      <div>
+        <label class="field-label">Language / Subject</label>
+        <select id="assign-lang" onchange="updateAssignTopics()">
+          <option>English</option>
+          <option>Arabic</option>
+          <option>Urdu</option>
+          <option>Hindi</option>
+        </select>
       </div>
-      <div id="assign-prompt" class="card" style="margin-top:18px; display:none; background:var(--gold-soft); border:none;"></div>
+      <div>
+        <label class="field-label">Topic</label>
+        <select id="assign-topic"></select>
+      </div>
+      <div>
+        <label class="field-label">Level</label>
+        <select id="assign-level">
+          <option>Beginner</option>
+          <option selected>Intermediate</option>
+          <option>Advanced</option>
+        </select>
+      </div>
     </div>
+    <div class="action-row" style="margin-top:14px;">
+      <button class="action-btn outline" onclick="showAssignTopics()">📋 Full topic list</button>
+      <button class="action-btn outline" onclick="showDemoAssignment()">👁️ See a demo assignment</button>
+      <button class="action-btn" onclick="getAssignment()">Get my assignment</button>
+    </div>
+    <div id="assign-topics-list" class="card" style="margin-top:18px; display:none;"></div>
+    <div id="assign-demo" class="card" style="margin-top:18px; display:none; background:var(--green-soft); border:none;"></div>
+    <div id="assign-prompt" class="card" style="margin-top:18px; display:none; background:var(--gold-soft); border:none;"></div>
     <div class="card" style="margin-top:18px;">
       <label class="field-label">Your response</label>
-      <textarea class="write-area" id="assign-answer" placeholder="Write your answer here..."></textarea>
-      <button class="action-btn gold" style="margin-top:14px;" onclick="submitAssignment()">Submit for feedback</button>
+      <textarea class="write-area" id="assign-answer" placeholder="Write your answer here — or attach a photo/PDF of handwritten work below..."></textarea>
+      <div class="image-preview-chip" id="assign-image-preview" style="display:none; margin-top:10px;"></div>
+      <div style="display:flex; gap:10px; margin-top:14px; align-items:center;">
+        <input type="file" id="assign-image-input" accept="image/*,application/pdf" style="display:none;" onchange="handleAssignImageSelect(event)">
+        <button class="icon-btn" onclick="document.getElementById('assign-image-input').click()" title="Attach photo or PDF">📎</button>
+        <button class="action-btn gold" onclick="submitAssignment()">Submit for feedback</button>
+      </div>
     </div>
     <div id="assign-feedback" class="card" style="margin-top:18px; display:none;"></div>
   </div>
@@ -169,31 +251,21 @@
   <div class="page" id="page-exam">
     <div class="page-head">
       <h1>Exam Practice</h1>
-      <p>Generate a fresh English-section practice set for your target exam. Bubble the OMR sheet like the real thing.</p>
+      <p>Practice questions for Arabic, Urdu, Hindi, or English — pick a topic and answer OMR-style.</p>
     </div>
     <div class="card exam-setup">
       <div>
-        <label class="field-label">Exam</label>
-        <select id="exam-select">
-          <option>SSC (CGL / CHSL)</option>
-          <option>UPSC Civil Services (Prelims)</option>
-          <option>Banking (IBPS / SBI PO)</option>
-          <option>Railways (RRB NTPC)</option>
-          <option>NEET</option>
-          <option>CAT</option>
-          <option>XAT</option>
-          <option>State PSC</option>
+        <label class="field-label">Language / Subject</label>
+        <select id="exam-select" onchange="updateExamTopics()">
+          <option>English</option>
+          <option>Arabic</option>
+          <option>Urdu</option>
+          <option>Hindi</option>
         </select>
       </div>
       <div>
         <label class="field-label">Topic</label>
-        <select id="exam-topic">
-          <option>Reading Comprehension</option>
-          <option>Grammar / Error Spotting</option>
-          <option>Vocabulary (Synonyms/Antonyms)</option>
-          <option>Cloze Test</option>
-          <option>Sentence Improvement</option>
-        </select>
+        <select id="exam-topic"></select>
       </div>
       <button class="action-btn" onclick="getExamSet()">Generate practice set</button>
     </div>
